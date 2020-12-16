@@ -7,6 +7,9 @@ from db import DocInDB
 import db 
 from datetime import date
 from typing import Dict
+import dropbox
+import tempfile
+import os
 
 app = FastAPI()
 
@@ -36,9 +39,19 @@ async def files():
 async def create_upload_file(iddoc:int,fecvencimientodoc:str,
                 nomdoc:str,
                 idusuario:int,uploaded_file: UploadFile = File(...)):
-    file_location = f"uploadfiles/{uploaded_file.filename}"
-    with open(file_location, "wb+") as file_object:
-        file_object.write(uploaded_file.file.read())
+#codigo antiguo
+#   file_location = f"uploadfiles/{uploaded_file.filename}"
+#   with open(file_location, "wb+") as file_object:
+#       file_object.write(uploaded_file.file.read())
+# fin codigo antiguo
+       
+#nuevo codigo
+    file_to = '/' + uploaded_file.filename
+#conexion con DrpBox
+    dbx = dropbox.Dropbox('ZLnvyxN_O3oAAAAAAAAAAROUWKg5XPiHwDd4fH-djVUAfupDPYiVJuayBgJJWsxA')
+    #dbx.files_upload(open(file_from, 'rb').read(), file_to)
+    dbx.files_upload(uploaded_file.file.read(), file_to)
+#fin nuevo codigo
     if iddoc in database_docs:
        raise HTTPException(status_code=406, detail="El documento ya existe!")
     else:
@@ -48,4 +61,5 @@ async def create_upload_file(iddoc:int,fecvencimientodoc:str,
                                             "fecvencimientodoc": fecvencimientodoc,
                                             "pathdoc": "/uploadfiles/" + uploaded_file.filename,
                                             "idusuario": idusuario})
-    return {"info": f"Archivo '{uploaded_file.filename}' ha sido cargado en '{file_location}' y la informacion ha sido grabada con exito"}
+    return {"info": f"Archivo '{uploaded_file.filename}' ha sido cargado en dropbox y la informacion ha sido grabada con exito"}
+#   return {"info": f"Archivo '{uploaded_file.filename}' ha sido cargado en '{file_location}' y la informacion ha sido grabada con exito"}
