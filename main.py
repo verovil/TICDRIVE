@@ -8,7 +8,6 @@ import db
 from datetime import date
 from typing import Dict
 import dropbox
-import tempfile
 import os
 
 app = FastAPI()
