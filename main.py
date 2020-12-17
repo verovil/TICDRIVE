@@ -14,6 +14,14 @@ app = FastAPI()
 
 today = date.today()
 
+origins = [
+    "https://ticdrive-ciclo3.herokuapp.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost",
+    "http://localhost:8081",
+    "http://localhost:8081"
+]
+
 database_docs = Dict[str, DocInDB]
 database_docs = {
     1: DocInDB(**{"iddoc":1,
